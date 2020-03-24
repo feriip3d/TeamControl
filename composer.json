@@ -1,0 +1,23 @@
+{
+    "name": "feriip3d/nautilus",
+    "description": "Framework Nautilus v3",
+    "type": "project",
+    "authors": [
+        {
+            "name": "Felipe Geroldi",
+            "email": "feriip3d@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Nautilus\\": "src/Nautilus",
+            "App\\": "src/App"
+        }
+    },
+    "require": {
+        "twig/twig": "^3.0",
+        "vlucas/phpdotenv": "^4.1",
+        "phpmailer/phpmailer": "^6.1",
+        "league/oauth2-google": "^3.0"
+    }
+}

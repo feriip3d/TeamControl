@@ -1,0 +1,43 @@
+{% extends "Layouts/sidebar_layout.html" %}
+{% block styles %}
+{{ parent() }}
+<link rel="stylesheet" href="/public/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
+{% endblock %}
+{% block app_content %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="box box-primary">
+            <form role="form" id="form-search">
+                <div class="box-body">
+                    <h2>Novo usuário</h2><br/>
+                    <div class="form-group">
+                        <label for="full-name">Nome Completo:</label>
+                        <input type="text" class="form-control" id="full-name" name="full_name" placeholder="">
+                    </div>
+                    <div class="form-group">
+                        <label for="full-name">Email:</label>
+                        <input type="text" class="form-control" id="email" name="email" placeholder="">
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Senha:</label>
+                        <input type="text" class="form-control" id="password" name="password" placeholder="">
+                    </div>
+                </div>
+                <div class="box-footer">
+                    <button type="submit" class="btn btn-success" id="b-search">Cadastrar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{{ parent() }}
+<script src="/public/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="/public/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+<script>
+    $(function() {
+    });
+</script>
+{% endblock %}

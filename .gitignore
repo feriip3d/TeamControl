@@ -1,0 +1,11 @@
+.env
+.env.development
+.env.production
+.idea/
+composer.lock
+package-lock.json
+AdminLTE/
+cache/
+composer.phar
+node_modules/
+vendor/

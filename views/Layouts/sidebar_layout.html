@@ -1,0 +1,153 @@
+{% extends "Layouts/app_layout.html" %}
+{% set bodyclass = "old-transition skin-blue fixed sidebar-mini" %}
+
+{% block styles %}
+<style>
+    .box-footer
+    {
+        background: transparent !important;
+    }
+</style>
+<link rel="stylesheet" href="/public/dist/css/skins/_all-skins.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+{% endblock %}
+
+{% block content %}
+<!-- Site wrapper -->
+<div class="wrapper">
+
+    <header class="main-header">
+        <a href="/" class="logo">
+            <span class="logo-mini"><b>{{ company_initials }}</b></span>
+            <span class="logo-lg"><b>{{ company_name }}</b></span>
+        </a>
+        <nav class="navbar navbar-static-top">
+            <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </a>
+
+            <div class="navbar-custom-menu">
+                <ul class="nav navbar-nav">
+                    <!-- User Account: style can be found in dropdown.less -->
+                    <li class="dropdown user user-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <img src="{{ img.loadImage('/private/users/img/'~ user.getId ~'.png') }}" class="user-image" alt="{{ user.getFullName }}">
+                            <span class="hidden-xs">{{ user.getFullName }}</span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li class="user-header">
+                                <img src="{{ img.loadImage('/private/users/img/'~ user.getId ~'.png') }}" class="img-circle" alt="{{ user.getFullName }}">
+
+                                <p>
+                                    {{ user.getFullName }}
+<!--                                    <small>Member since Nov. 2012</small>-->
+                                </p>
+                            </li>
+                            <!-- Menu Body -->
+                            <!-- Menu Footer-->
+                            <li class="user-footer">
+                                <div class="pull-left">
+                                    <a href="/usuarios?id={{ user.getId }}" class="btn btn-default btn-flat">Perfil</a>
+                                </div>
+                                <div class="pull-right">
+                                    <a href="/logout" class="btn btn-default btn-flat">Sair</a>
+                                </div>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <!-- =============================================== -->
+
+    <!-- Left side column. contains the sidebar -->
+    <aside class="main-sidebar">
+        <!-- sidebar: style can be found in sidebar.less -->
+        <section class="sidebar">
+            <!-- search form -->
+            <form action="#" method="get" class="sidebar-form">
+                <div class="input-group">
+                    <input type="text" name="q" class="form-control" placeholder="Search...">
+                    <span class="input-group-btn">
+                <button type="submit" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i>
+                </button>
+              </span>
+                </div>
+            </form>
+            <!-- /.search form -->
+            <!-- sidebar menu: : style can be found in sidebar.less -->
+            <ul class="sidebar-menu" data-widget="tree">
+                <li class="header">Ajustes do Sistema</li>
+                <li class="treeview">
+                    <a href="#">
+                        <i class="fa fa-gears"></i> <span>Configurações</span>
+                        <span class="pull-right-container">
+                            <i class="fa fa-angle-left pull-right"></i>
+                        </span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li><a href="/usuarios"><i class="fa fa-circle-o"></i> Usuários</a></li>
+                    </ul>
+                </li>
+                <li class="treeview">
+                    <a href="#">
+                        <i class="fa fa-dashboard"></i> <span>Dashboard</span>
+                        <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li><a href="../../index.html"><i class="fa fa-circle-o"></i> Dashboard v1</a></li>
+                        <li><a href="../../index2.html"><i class="fa fa-circle-o"></i> Dashboard v2</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </section>
+        <!-- /.sidebar -->
+    </aside>
+
+    <!-- =============================================== -->
+
+    <div class="content-wrapper">
+        <section class="content-header">
+            <h1>
+                {{ page_title }}
+                <small>{{ page_subheading }}</small>
+            </h1>
+        </section>
+
+        <!-- Main content -->
+        <section class="content">
+            {% block app_content %}
+            {% endblock %}
+        </section>
+    </div>
+
+    <footer class="main-footer">
+        <div class="pull-right hidden-xs">
+            <b>Versão </b> {{ app_version }}
+        </div>
+        <strong>Copyright &copy; 2020 <a href="#">{{ app_name }}</a>.</strong> Todos os direitos reservados.
+    </footer>
+
+    <!-- Control Sidebar -->
+    <aside class="control-sidebar control-sidebar-dark">
+        <!-- Create the tabs -->
+        <ul class="nav nav-tabs nav-justified control-sidebar-tabs">
+            <li><a href="#control-sidebar-home-tab" data-toggle="tab"><i class="fa fa-home"></i></a></li>
+            <li><a href="#control-sidebar-settings-tab" data-toggle="tab"><i class="fa fa-gears"></i></a></li>
+        </ul>
+    </aside>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="/public/bower_components/jquery-slimscroll/jquery.slimscroll.min.js"></script>
+<script src="/public/bower_components/fastclick/lib/fastclick.js"></script>
+<script src="/public/dist/js/adminlte.min.js"></script>
+{% endblock %}

@@ -1,0 +1,64 @@
+{% extends "Layouts/app_layout.html" %}
+{% set bodyclass = "hold-transition login-page" %}
+{% block styles %}
+<style>
+    .txt-bold {
+        font-weight: bold;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="login-box">
+    <div class="login-logo">
+        <span class="txt-bold">{{ company_name }}</span>
+    </div>
+    <!-- /.login-logo -->
+    <div class="login-box-body">
+        <p class="login-box-msg">Entre para iniciar sua sessão</p>
+
+        <form method="post">
+            <input type="hidden" name="token" value="{{ form_token('login') }}" />
+            <div class="form-group has-feedback">
+                <input type="text" name="username" class="form-control" placeholder="Usuário" value="{{ username }}">
+                <span class="glyphicon glyphicon-user form-control-feedback"></span>
+            </div>
+            <div class="form-group has-feedback">
+                <input type="password" name="password" class="form-control" placeholder="Senha">
+                <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+            </div>
+            <div class="row">
+                <div class="col-xs-12">
+                    <button type="submit" class="btn btn-primary btn-block btn-flat" name="b_sign_in" value="sign_in">Sign In</button>
+                </div>
+            </div>
+        </form>
+
+        {% if page_error != '' %}
+        <div id="page_error">
+            <br/>
+            <div class="alert alert-danger alert-dismissible">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                <h4><i class="icon fa fa-ban"></i>Erro</h4>
+                {% if page_error == 'wrong_user_pass' %}
+                    Usuário ou senha incorretos!
+                {% endif %}
+                {% if page_error == 'invalid_username' %}
+                    Usuário ou senha inválidos!
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+        <br/>
+        <a href="/login/forgot">Esqueci a minha senha</a><br>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    $(function () {
+        $('#page_error').delay(1500).fadeOut('slow', 'swing');
+    });
+</script>
+{% endblock %}
