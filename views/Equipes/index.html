@@ -1,0 +1,24 @@
+{% extends "Layouts/sidebar_layout.html" %}
+{% block styles %}
+{{ parent() }}
+<link rel="stylesheet" href="/public/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
+{% endblock %}
+
+{% block app_content %}
+<div class="row">
+    <div class="col-md-12">
+        {{ user.getNome }}
+    </div>
+</div>
+<br/>
+{% endblock %}
+
+{% block scripts %}
+{{ parent() }}
+<script src="/public/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="/public/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+<script>
+    $(function(){
+    });
+</script>
+{% endblock %}

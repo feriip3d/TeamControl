@@ -17,4 +17,13 @@ class Database
 
         return self::$connection;
     }
+
+    public static function closeConnection()
+    {
+        if(!is_null(self::$connection))
+        {
+            self::$connection->query("KILL CONNECTION_ID()");
+            self::$connection = null;
+        }
+    }
 }
