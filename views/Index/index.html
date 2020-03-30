@@ -30,7 +30,7 @@
                             <td>{{ evento.getCategoria.getDescricao }}</td>
                             <td>{{ evento.getLocal.getNome }}</td>
                             <td style="text-align:center">{{ evento.getData }}</td>
-                            <td><button type="button" class="btn btn-block btn-primary" onClick="gerenciarEvento('{{ evento.getId }}')">Gerenciar Equipe</button></td>
+                            <td><button type="button" class="btn btn-block btn-primary" onClick="gerenciarEvento('{{ evento.getId }}')"><i class="fa fa-fw fa-pencil"></i> Gerenciar Equipe</button></td>
                         </tr>
                     {% endfor %}
                     </tbody>
@@ -48,7 +48,7 @@
 <script>
     function gerenciarEvento(id)
     {
-        location.href = "/equipes?evento="+id;
+        location.href = "/equipes/gerenciar?evento="+id;
     }
 </script>
 {% endblock %}

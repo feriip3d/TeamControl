@@ -3,6 +3,7 @@ namespace App\Controllers;
 use App\Models\Colaborador;
 use App\Persistence\ColabFuncaoDAL;
 use App\Persistence\ColaboradorDAL;
+use Composer\Script\Event;
 use Nautilus\Resources\Controller;
 use Nautilus\Util\SessionHelper;
 use App\Persistence\EventoDAL;
@@ -10,6 +11,61 @@ use App\Persistence\EventoDAL;
 class EquipesController extends Controller
 {
     public function index(?array $parameters)
+    {
+        $this->setParameters($parameters);
+        $method = func_get_arg(1);
+        if($method == "POST")
+        {
+            $acao = filter_input(INPUT_POST, "acao", FILTER_SANITIZE_STRING);
+            if($acao == "pesquisar")
+            {
+                $termo_tipo = filter_input(INPUT_POST, "i_term", FILTER_SANITIZE_STRING);
+
+                if($termo_tipo == "id")
+                {
+                    $termo = filter_input(INPUT_POST, "i_search", FILTER_SANITIZE_NUMBER_INT);
+                    if(is_numeric($termo))
+                    {
+                        $evento = EventoDAL::getById($termo);
+                        $json = array();
+                        if($evento != null)
+                            $json[] = $evento->toArray();
+                    } else {
+                        $json = [
+                            "error" => true,
+                            "error_code" => 1,
+                            "return" => [
+                                "message" => "Parâmetros Invalidos"
+                            ]
+                        ];
+                    }
+                } else if ($termo_tipo == "nome") {
+                    $termo = filter_input(INPUT_POST, "i_search", FILTER_SANITIZE_STRING);
+                    $eventos = EventoDAL::getByStatement('descricao LIKE ?',["%{$termo}%"]);
+                    $json = array();
+                    foreach($eventos as $evento)
+                    {
+                        $json[] = $evento->toArray();
+                    }
+                }
+            } else {
+                $json = [
+                    "error" => true,
+                    "error_code" => 2,
+                    "return" => [
+                        "message" => "Ação Inválida"
+                    ]
+                ];
+            }
+
+            echo json_encode($json);
+        } else {
+            $this->pushParameter("page_title", "Gerenciar Equipes");
+            $this->render("index");
+        }
+    }
+
+    public function gerenciar(?array $parameters)
     {
         $this->setParameters($parameters);
         $evento_id = filter_var($this->getParameter("evento"), FILTER_VALIDATE_INT);
@@ -75,7 +131,7 @@ class EquipesController extends Controller
                 }
 
                 echo json_encode($colaboradores);
-            } else if ($acao == "del_colab") {
+            } else if ($acao == "rem_colab") {
                 $evento_id = filter_input(INPUT_POST, "evento_id", FILTER_VALIDATE_INT);
                 $colab_id = filter_input(INPUT_POST, "colab_id", FILTER_VALIDATE_INT);
 
@@ -97,12 +153,26 @@ class EquipesController extends Controller
                 }
 
                 echo json_encode($json);
+            } else if ($acao == "list_colab_disp") {
+                $evento_id = filter_input(INPUT_POST, "evento_id", FILTER_VALIDATE_INT);
+                $colab_disp = ColaboradorDAL::getNotInEquipe($evento_id);
+
+                $json = array();
+                $i = 0;
+
+                foreach($colab_disp as $colab)
+                {
+                    $json[$i]['id'] = $colab->getId();
+                    $json[$i]['nome'] = $colab->getNome();
+                    $i++;
+                }
+
+                echo json_encode($json);
             }
         } else {
             if(empty($evento_id) || !is_numeric($evento_id))
             {
                 $this->pushParameter("error", "missing_id");
-                // TELA PARA CONSULTA
             } else {
                 $evento = EventoDAL::getById($evento_id);
                 if(is_null($evento))
@@ -120,7 +190,7 @@ class EquipesController extends Controller
             }
 
             $this->pushParameter("page_title", "Gerenciar Equipes");
-            $this->render("index");
+            $this->render("gerenciar");
         }
     }
 }

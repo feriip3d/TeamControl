@@ -7,12 +7,11 @@
 *****************************************/
 session_start();
 
-// Somente para desenvolvimento
-// habilitando debugs
-ini_set("display_errors", 1);
-ini_set("display_startup_errors", 1);
-error_reporting(E_ALL);
-// Somente para desenvolvimento
+// MODO PRODUÇÃO ATIVADO
+ini_set("display_errors", 0);
+ini_set("display_startup_errors", 0);
+error_reporting(0);
+// MODO PRODUÇÃO ATIVADO
 
 // Caminho raiz de todo o framework
 define("ROOT_DIR", str_replace("\\Webroot", "", __DIR__));

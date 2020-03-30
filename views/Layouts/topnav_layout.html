@@ -18,7 +18,7 @@
         <nav class="navbar navbar-static-top">
             <div class="container">
                 <div class="navbar-header">
-                    <a href="/" class="navbar-brand"><b>{{ company_name }}</b></a>
+                    <a href="/" class="navbar-brand"><img style="display:inline" src="/public/icon/favicon-16x16.png"/><b>{{ company_name }}</b></a>
                     <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse">
                         <i class="fa fa-bars"></i>
                     </button>
@@ -30,12 +30,6 @@
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">Eventos<span class="caret"></span></a>
                             <ul class="dropdown-menu" role="menu">
                                 <li><a href="/equipes">Gerenciar Equipes</a></li>
-                            </ul>
-                        </li>
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Configurações<span class="caret"></span></a>
-                            <ul class="dropdown-menu" role="menu">
-                                <li><a href="#">Usuários</a></li>
                             </ul>
                         </li>
                     </ul>
@@ -58,7 +52,7 @@
                                 </li>
                                 <li class="user-footer">
                                     <div class="pull-left">
-                                        <a href="/usuarios?id={{ user.getId }}" class="btn btn-default btn-flat">Perfil</a>
+                                        <a href="#" class="btn btn-default btn-flat">Perfil</a>
                                     </div>
                                     <div class="pull-right">
                                         <a href="/logout" class="btn btn-default btn-flat">Sair</a>

@@ -147,10 +147,11 @@ class ColaboradorDAL
 
     public static function removeFromEquipe(int $colab_id, int $evento_id)
     {
-        $sql = Database::getConnection()->prepare("DELETE FROM eventos_colab 
-            INNER JOIN equipes ON equipes.id = eventos_colab.id_equipe
-            WHERE id_colab = :pIdColab AND
-            id_evento = :pIdEvento");
+        $sql = Database::getConnection()->prepare("
+        DELETE  ec.* FROM eventos_colab ec
+            INNER JOIN equipes ON equipes.id = ec.id_equipe
+        WHERE ec.id_colab = :pIdColab AND
+        equipes.id_evento = :pIdEvento");
         $sql->bindParam(':pIdColab', $colab_id, PDO::PARAM_INT);
         $sql->bindParam(':pIdEvento', $evento_id, PDO::PARAM_INT);
         $success = $sql->execute();

@@ -126,4 +126,23 @@ class Evento implements \Nautilus\Resources\Model
     {
         return $this->categoria;
     }
+
+    public function serialize()
+    {
+        $instance = get_object_vars($this);
+        $instance['data_nascimento'] = MiscHelper::to_br_dateformat($instance['data_nascimento']);
+        $instance['funcao'] = $this->funcao->getNome();
+        $instance['acoes'] = "";
+        return json_encode($instance);
+    }
+
+    public function toArray()
+    {
+        $instance = get_object_vars($this);
+        $instance['data'] = MiscHelper::to_br_dateformat($instance['data']);
+        $instance['categoria'] = $this->categoria->getDescricao();
+        $instance['local'] = $this->local->getNome();
+        $instance['acoes'] = "";
+        return $instance;
+    }
 }
