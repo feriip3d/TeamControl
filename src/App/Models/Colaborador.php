@@ -1,7 +1,6 @@
 <?php
 namespace App\Models;
-
-
+use App\Persistence\ColabFuncaoDAL;
 use Nautilus\Util\MiscHelper;
 
 class Colaborador implements \Nautilus\Resources\Model
@@ -12,11 +11,15 @@ class Colaborador implements \Nautilus\Resources\Model
     private String $celular;
     private String $data_nascimento;
     private String $cpf;
+    private ?ColabFuncao $funcao;
 
     public function __construct()
     {
         $num_args = func_num_args();
         switch ($num_args) {
+            case 7:
+                call_user_func_array([$this, "__construct4"], func_get_args());
+                break;
             case 6:
                 call_user_func_array([$this, "__construct1"], func_get_args());
                 break;
@@ -38,6 +41,7 @@ class Colaborador implements \Nautilus\Resources\Model
         $this->setCelular($celular);
         $this->setDataNascimento($data_nascimento);
         $this->setCPF($cpf);
+        $this->setFuncao(0);
     }
 
     private function __construct2(String $nome, String $telefone, String $celular, String $data_nascimento, String $cpf)
@@ -48,6 +52,7 @@ class Colaborador implements \Nautilus\Resources\Model
         $this->setCelular($celular);
         $this->setDataNascimento($data_nascimento);
         $this->setCPF($cpf);
+        $this->setFuncao(0);
     }
 
     private function __construct3()
@@ -56,8 +61,20 @@ class Colaborador implements \Nautilus\Resources\Model
         $this->setNome("");
         $this->setTelefone("");
         $this->setCelular("");
-        $this->setDataNascimento("");
+        $this->setDataNascimento("0000-00-00");
         $this->setCPF("");
+        $this->setFuncao(0);
+    }
+
+    private function __construct4(int $id, String $nome, String $telefone, String $celular, String $data_nascimento, String $cpf, int $id_funcao)
+    {
+        $this->setId($id);
+        $this->setNome($nome);
+        $this->setTelefone($telefone);
+        $this->setCelular($celular);
+        $this->setDataNascimento($data_nascimento);
+        $this->setCPF($cpf);
+        $this->setFuncao($id_funcao);
     }
 
     public function setId(int $id)
@@ -129,5 +146,36 @@ class Colaborador implements \Nautilus\Resources\Model
     public function getCPF() : String
     {
         return $this->cpf;
+    }
+
+    public function setFuncao(int $id_funcao)
+    {
+        if($id_funcao <= 0)
+        {
+            $this->funcao = null;
+        } else {
+            $this->funcao = ColabFuncaoDAL::getById($id_funcao);
+        }
+    }
+
+    public function getFuncao() : ColabFuncao
+    {
+        return $this->funcao;
+    }
+
+    public function serialize()
+    {
+        $instance = get_object_vars($this);
+        $instance['data_nascimento'] = MiscHelper::to_br_dateformat($instance['data_nascimento']);
+        $instance['funcao'] = $this->funcao->getNome();
+        return json_encode($instance);
+    }
+
+    public function toArray()
+    {
+        $instance = get_object_vars($this);
+        $instance['data_nascimento'] = MiscHelper::to_br_dateformat($instance['data_nascimento']);
+        $instance['funcao'] = $this->funcao->getNome();
+        return $instance;
     }
 }

@@ -3,6 +3,7 @@
 {% block styles %}
 {{ parent() }}
 <link rel="stylesheet" href="/public/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
+<link rel="stylesheet" href="/public/css/chosen/chosen.min.css">
 <style>
     .title-info
     {
@@ -52,55 +53,53 @@
             <div class="box-body">
                 <div id="actions text-right" class="row">
                     <div class="col-md-12">
-                        <label>Nome: </label>
-                        <select style="width: 200px" class="form-control inline" id="id">
-                            <option value="1">Jose da Silva</option>
-                            <option value="2">Geremias</option>
-                            <option value="3">Gabriel</option>
-                            <option value="4">Lucas</option>
-                        </select>
-                        <label style="padding-left: 10px;padding-right: 10px">Funcao:</label><input style="padding-left:5px;width: 100px" class="form-control inline" type="text" value="Barman">
-                        <button style="margin-left: 15px" class="btn btn-success">Adicionar Colaborador</button>
+                        <form method="NONE" id="new-colab" style="display:inline">
+                            <label>Nome: </label>
+                            <select style="width: 200px" class="form-control inline chosen-sel" name="i_colab_id" id="new-colab-id">
+                                <option value=""></option>
+                                {% for colaborador in colab_disp %}
+                                <option value="{{ colaborador.getId }}">{{ colaborador.getNome }}</option>
+                                {% endfor %}
+                            </select>
+                            <label style="padding-left: 10px;padding-right: 10px">Função:</label>
+                            <select style="width: 200px" class="form-control inline chosen-sel" name="i_colab_func" id="new-colab-func">
+                                <option value=""></option>
+                                {% for funcao in funcoes %}
+                                <option value="{{ funcao.getId }}">{{ funcao.getNome }}</option>
+                                {% endfor %}
+                            </select>
+                            <label style="padding-left: 10px;padding-right: 10px">Valor Pago:</label>
+                            <input style="padding-left:5px;width: 100px" class="form-control inline" type="number" id="new-colab-value" name="i_colab_value">
+                        </form>
+                        <button style="margin-left: 15px" class="btn btn-success" id="add-colab">Adicionar Colaborador</button><br/><br/>
+                        <div class="alert alert-danger alert-dismissible" id="new-colab-error" style="display:none">
+                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                            <h4><i class="icon fa fa-ban"></i>Falha ao adicionar colaborador!</h4>
+                            Verifique se os campos estão preenchidos corretamente e tente novamente.
+                        </div>
+
+                        <div class="alert alert-success alert-dismissible" id="new-colab-success" style="display:none">
+                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                            <h4><i class="icon fa fa-ban"></i>Colaborador Adicionado!</h4>
+                            O Colaborador foi adicionado a lista de colaboradores do evento.
+                        </div>
                     </div>
                 </div>
                 <br/>
-                <table class="table table-bordered">
-                    <tbody><tr>
-                        <th style="width: 10px">#</th>
-                        <th>Código do Colaborador</th>
-                        <th>Nome</th>
-                        <th>Telefone</th>
-                        <th>Celular</th>
-                        <th>Idade</th>
-                        <th>Função</th>
-                        <th style="width: 40px">Opções</th>
-                    </tr>
-                    {% for colaborador in colaboradores %}
-                    <tr>
-                        <td style="text-align:right">{{ loop.index }}</td>
-                        <td style="text-align:right">{{ colaborador.getId }}</td>
-                        <td>{{ colaborador.getNome }}</td>
-                        <td>{{ colaborador.getTelefone }}</td>
-                        <td>{{ colaborador.getCelular }}</td>
-                        <td style="text-align:center">{{ colaborador.getDataNascimento }}</td>
-                        <td>Barman</td>
-                        <td class="actions text-right">
-                            <a href="remover?id=" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i> Remover</a>
-                        </td>
-                    </tr>
-                    {% endfor %}
-
-                    </tbody></table>
-            </div>
-            <!-- /.box-body -->
-            <div class="box-footer clearfix">
-                <ul class="pagination pagination-sm no-margin pull-right">
-                    <li><a href="#">«</a></li>
-                    <li><a href="#">1</a></li>
-                    <li><a href="#">2</a></li>
-                    <li><a href="#">3</a></li>
-                    <li><a href="#">»</a></li>
-                </ul>
+                <table id="colab-table" class="table table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th>Código do Colaborador</th>
+                            <th>Nome</th>
+                            <th>Telefone</th>
+                            <th>Celular</th>
+                            <th>Idade</th>
+                            <th>Função</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
@@ -136,8 +135,104 @@
 {{ parent() }}
 <script src="/public/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
 <script src="/public/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+<script src="/public/js/chosen.jquery.min.js"></script>
+
 <script>
+    function atualizarEquipe(){
+        $.ajax({
+            method: "POST",
+            url: "/equipes",
+            dataType: 'json',
+            data: "acao=list_colab&evento_id={{ evento.getId }}",
+            complete: function(data) {
+                console.log(data);
+                let json_data = data.responseJSON;
+                $('#colab-table').DataTable({
+                    destroy: true,
+                    data: json_data,
+                    columns: [
+                        {data: 'id'},
+                        {data: 'nome'},
+                        {data: 'telefone'},
+                        {data: 'celular'},
+                        {data: 'data_nascimento'},
+                        {data: 'funcao'}
+                    ],
+                    "language": {
+                        "sEmptyTable": "Nenhum registro encontrado",
+                        "sInfo": "Mostrando de _START_ até _END_ de _TOTAL_ registros",
+                        "sInfoEmpty": "Mostrando 0 até 0 de 0 registros",
+                        "sInfoFiltered": "(Filtrados de _MAX_ registros)",
+                        "sInfoPostFix": "",
+                        "sInfoThousands": ".",
+                        "sLengthMenu": "_MENU_ resultados por página",
+                        "sLoadingRecords": "Carregando...",
+                        "sProcessing": "Processando...",
+                        "sZeroRecords": "Nenhum registro encontrado",
+                        "sSearch": "Pesquisar",
+                        "oPaginate": {
+                            "sNext": "Próximo",
+                            "sPrevious": "Anterior",
+                            "sFirst": "Primeiro",
+                            "sLast": "Último"
+                        },
+                        "oAria": {
+                            "sSortAscending": ": Ordenar colunas de forma ascendente",
+                            "sSortDescending": ": Ordenar colunas de forma descendente"
+                        },
+                        "select": {
+                            "rows": {
+                                "_": "Selecionado %d linhas",
+                                "0": "Nenhuma linha selecionada",
+                                "1": "Selecionado 1 linha"
+                            }
+                        }
+                    },
+                    "bFilter": false
+                });
+            },
+            error: function(xhr,er) {
+                $('#mensagem_erro').html('<p class="destaque">Error ' + xhr.status + ' - ' + xhr.statusText + '<br />Tipo de erro: ' + er + '</p>')
+            }
+        })
+    };
+
     $(function(){
+        atualizarEquipe();
+        $(".chosen-sel").chosen({allow_single_deselect: true});
+
+        $("#add-colab").click(function(){
+            if($("#new-colab-id").val()*1 > 0 && $("#new-colab-func").val()*1 > 0 && $("#new-colab-value").val()*1 > 0)
+            {
+                let new_colab_info = "acao=add_colab&evento_id={{ evento.getId }}&"+$("#new-colab").serialize();
+                $.ajax({
+                    type: "POST",
+                    url: "/equipes",
+                    data: new_colab_info,
+                    dataType: "json"
+                }).done(function(response) {
+                    console.log(response);
+                    if(response.error == false)
+                    {
+                        $("#new-colab-id option[value='"+ $("#new-colab-id").val() +"']").remove();
+                        $("#new-colab-id").val("").trigger('chosen:updated');
+                        $("#new-colab-func").val("").trigger('chosen:updated');
+                        $("#new-colab-value").val("");
+
+                        $("#new-colab-success").show();
+                        $("#new-colab-success").delay(1500).fadeOut('slow', 'swing');
+                        atualizarEquipe();
+                    }
+                }).fail(function(jqXHR, textStatus ) {
+                    console.log("Request failed: " + textStatus);
+                });
+            } else {
+                $(function () {
+                    $('#new-colab-error').show();
+                    $('#new-colab-error').delay(1500).fadeOut('slow', 'swing');
+                });
+            }
+        });
     });
 </script>
 {% endblock %}
