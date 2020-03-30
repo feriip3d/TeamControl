@@ -109,7 +109,7 @@ class Colaborador implements \Nautilus\Resources\Model
 
     public function getTelefone() : String
     {
-        return $this->telefone;
+        return MiscHelper::mask($this->telefone, "(##)####-####");
     }
 
     public function setCelular(String $celular)
@@ -119,7 +119,7 @@ class Colaborador implements \Nautilus\Resources\Model
 
     public function getCelular() : String
     {
-        return $this->celular;
+        return MiscHelper::mask($this->celular, "(##)#####-####");
     }
 
     public function setDataNascimento(String $data)
@@ -145,7 +145,7 @@ class Colaborador implements \Nautilus\Resources\Model
 
     public function getCPF() : String
     {
-        return $this->cpf;
+        return MiscHelper::mask($this->cpf, '###.###.###-##');
     }
 
     public function setFuncao(int $id_funcao)
