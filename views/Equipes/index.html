@@ -4,97 +4,70 @@
 {{ parent() }}
 <link rel="stylesheet" href="/public/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
 <link rel="stylesheet" href="/public/css/chosen/chosen.min.css">
-<style>
-    .title-info
-    {
-        font-weight: bolder;
-    }
-</style>
 {% endblock %}
 
 {% block app_content %}
-{% if error is empty %}
 <div class="row">
     <div class="col-md-12">
         <div class="box">
             <div class="box-header with-border">
-                <h3 class="box-title">Informações do Evento</h3>
+                <h3 class="box-title">Pesquisar por evento</h3>
             </div>
             <!-- /.box-header -->
             <div class="box-body">
-                <div style="display:inline-block;padding:5px">
-                    <i class="fa fa-fw fa-info-circle"></i><span class="title-info">Código do Evento</span>: {{ evento.getId }}<br/>
-                    <i class="fa fa-fw fa-sticky-note-o"></i><span class="title-info">Descrição</span>: {{ evento.getDescricao }}<br/>
+                <form role="form" id="f-search-event">
+                    <div class="box-body">
+                        <div class="form-group">
+                            <label for="i_search">Termo de Busca</label>
+                            <input type="text" class="form-control" id="i_search" name="i_search" placeholder="Ex: Nome do Evento, Código do Evento...">
+                        </div>
+                        <div class="form-group">
+                            <div class="radio" style="display:inline;padding-left:7px;">
+                                <label>
+                                    <input type="radio" name="i_term" id="i_term_1" value="nome" checked>
+                                    Nome
+                                </label>
+                            </div>
+                            <div class="radio" style="display:inline;padding-left:7px;">
+                                <label>
+                                    <input type="radio" name="i_term" id="i_term_2" value="id">
+                                    Código
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.box-body -->
 
-                </div>
-                <div style="display:inline-block;padding:5px">
-                    <i class="fa fa-fw fa-reorder"></i><span class="title-info">Categoria</span>: {{ evento.getCategoria.getDescricao }}<br/>
-                    <i class="fa fa-fw fa-calendar"></i><span class="title-info">Data</span>: {{ evento.getData }}<br/>
-                </div>
-                <div style="display:inline-block;padding:5px">
-                    <i class="fa fa-fw fa-users"></i><span class="title-info">Total de Convidados</span>: {{ evento.getQtdePessoas }}<br/>
-                    <i class="fa fa-fw fa-building"></i><span class="title-info">Local</span>: {{ evento.getLocal.getNome }}<br/>
-                </div>
-                <div style="display:inline-block;padding:5px">
-                    <i class="fa fa-fw fa-location-arrow"></i><span class="title-info">Endereço</span>: {{ evento.getLocal.getEndereco }}<br/>
-                    <i class="fa fa-fw fa-money"></i><span class="title-info">Valor do Evento</span>: R$ {{ evento.getCategoria.getValor }}<br/>
+                    <div class="box-footer">
+                        <button type="button" class="btn btn-primary" id="b-search"><i class="fa fa-fw fa-search"></i> Pesquisar</button>
+                    </div>
+                </form>
+                <br/>
+                <div class="alert alert-danger alert-dismissible" id="search-id-error" style="display:none">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                    <h4><i class="icon fa fa-ban"></i>Falha ao pesquisar!</h4>
+                    O código informado é inválido.
                 </div>
             </div>
         </div>
     </div>
 </div>
-<div class="row">
+<div class="row" id="result-row" style="display:none">
     <div class="col-md-12">
         <div class="box">
             <div class="box-header with-border">
-                <h3 class="box-title">Gerenciar Colaboradores</h3>
+                <h3 class="box-title">Resultado da pesquisa</h3>
             </div>
             <!-- /.box-header -->
             <div class="box-body">
-                <div id="actions text-right" class="row">
-                    <div class="col-md-12">
-                        <form id="new-colab" style="display:inline">
-                            <label>Nome: </label>
-                            <select style="width: 200px" class="form-control inline chosen-sel" name="i_colab_id" id="new-colab-id">
-                                <option value=""></option>
-                                {% for colaborador in colab_disp %}
-                                <option value="{{ colaborador.getId }}">{{ colaborador.getNome }}</option>
-                                {% endfor %}
-                            </select>
-                            <label style="padding-left: 10px;padding-right: 10px">Função:</label>
-                            <select style="width: 200px" class="form-control inline chosen-sel" name="i_colab_func" id="new-colab-func">
-                                <option value=""></option>
-                                {% for funcao in funcoes %}
-                                <option value="{{ funcao.getId }}">{{ funcao.getNome }}</option>
-                                {% endfor %}
-                            </select>
-                            <label style="padding-left: 10px;padding-right: 10px">Valor Pago:</label>
-                            <input style="padding-left:5px;width: 100px" class="form-control inline" type="number" id="new-colab-value" name="i_colab_value">
-                        </form>
-                        <button style="margin-left: 15px" class="btn btn-success" id="add-colab">Adicionar Colaborador</button><br/><br/>
-                        <div class="alert alert-danger alert-dismissible" id="new-colab-error" style="display:none">
-                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                            <h4><i class="icon fa fa-ban"></i>Falha ao adicionar colaborador!</h4>
-                            Verifique se os campos estão preenchidos corretamente e tente novamente.
-                        </div>
-
-                        <div class="alert alert-success alert-dismissible" id="new-colab-success" style="display:none">
-                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                            <h4><i class="icon fa fa-ban"></i>Colaborador Adicionado!</h4>
-                            O Colaborador foi adicionado a lista de colaboradores do evento.
-                        </div>
-                    </div>
-                </div>
-                <br/>
-                <table id="colab-table" class="table table-bordered table-hover">
+                <table id="sr-table" class="table table-bordered table-hover">
                     <thead>
                         <tr>
-                            <th>Código do Colaborador</th>
-                            <th>Nome</th>
-                            <th>Telefone</th>
-                            <th>Celular</th>
-                            <th>Idade</th>
-                            <th>Função</th>
+                            <th>Código do Evento</th>
+                            <th>Descrição</th>
+                            <th>Categoria</th>
+                            <th>Local</th>
+                            <th>Data</th>
                             <th>Ações</th>
                         </tr>
                     </thead>
@@ -103,31 +76,6 @@
                 </table>
             </div>
         </div>
-    </div>
-</div>
-{% else %}
-<div class="row">
-    <div class="col-md-12">
-        <div class="box box-default">
-            <div class="box-header with-border">
-                <i class="fa fa-warning"></i>
-
-                <h3 class="box-title">Erro</h3>
-            </div>
-            <!-- /.box-header -->
-            <div class="box-body">
-                <div class="alert alert-danger alert-dismissible">
-                    {% if error == 'missing_id' %}
-                    <h4><i class="icon fa fa-ban"></i> Código inválido!</h4>
-                    O código do evento não foi informado.
-                    {% elseif error == 'missing_event' %}
-                    <h4><i class="icon fa fa-ban"></i> Evento inválido!</h4>
-                    O evento informado não existe, ou é inválido.
-                    {% endif %}
-                </div>
-            </div>
-        </div>
-        {% endif %}
     </div>
 </div>
 {% endblock %}
@@ -139,128 +87,76 @@
 <script src="/public/js/chosen.jquery.min.js"></script>
 
 <script>
-    function atualizarEquipe(){
-        $.ajax({
-            method: "POST",
-            url: "/equipes",
-            dataType: 'json',
-            data: "acao=list_colab&evento_id={{ evento.getId }}",
-            complete: function(data) {
-                let json_data = data.responseJSON;
-                $('#colab-table').DataTable({
-                    destroy: true,
-                    data: json_data,
-                    columns: [
-                        {data: 'id'},
-                        {data: 'nome'},
-                        {data: 'telefone'},
-                        {data: 'celular'},
-                        {data: 'data_nascimento'},
-                        {data: 'funcao'},
-                        {data: 'acoes',
-                            "fnCreatedCell": function (nTd, sData, oData, iRow, iCol) {
-                                $(nTd).html("" +
-                                    "<button type=\"button\" style=\"display:inline;margin-top:0;margin-left:5px;width:40px\" class=\"btn btn-block btn-danger\" onClick=\"remover_colab('{{ evento.getId }}', '"+ oData.id +"')\"> <i class=\"fa fa-remove\"></i></button>"+
-                                    "<button type=\"button\" style=\"display:inline;margin-top:0;margin-left:5px;width:40px\" class=\"btn btn-block btn-success\" onClick=\"window.open('" +
-                                    "https://api.whatsapp.com/send?phone=55"+ oData.celular +"" +
-                                    "&text=Olá "+ oData.nome +", você poderia confirmar sua presença no evento? Obrigado" +
-                                    "')\"> <i class=\"fa fa-whatsapp\"></i></button>"
-                                );
-                            },
-                        }
-                    ],
-                    "language": {
-                        "sEmptyTable": "Nenhum registro encontrado",
-                        "sInfo": "Mostrando de _START_ até _END_ de _TOTAL_ registros",
-                        "sInfoEmpty": "Mostrando 0 até 0 de 0 registros",
-                        "sInfoFiltered": "(Filtrados de _MAX_ registros)",
-                        "sInfoPostFix": "",
-                        "sInfoThousands": ".",
-                        "sLengthMenu": "_MENU_ resultados por página",
-                        "sLoadingRecords": "Carregando...",
-                        "sProcessing": "Processando...",
-                        "sZeroRecords": "Nenhum registro encontrado",
-                        "sSearch": "Pesquisar",
-                        "oPaginate": {
-                            "sNext": "Próximo",
-                            "sPrevious": "Anterior",
-                            "sFirst": "Primeiro",
-                            "sLast": "Último"
-                        },
-                        "oAria": {
-                            "sSortAscending": ": Ordenar colunas de forma ascendente",
-                            "sSortDescending": ": Ordenar colunas de forma descendente"
-                        },
-                        "select": {
-                            "rows": {
-                                "_": "Selecionado %d linhas",
-                                "0": "Nenhuma linha selecionada",
-                                "1": "Selecionado 1 linha"
-                            }
-                        }
-                    },
-                    "bFilter": false
-                });
-            },
-            error: function(xhr,er) {
-                $('#mensagem_erro').html('<p class="destaque">Error ' + xhr.status + ' - ' + xhr.statusText + '<br />Tipo de erro: ' + er + '</p>')
-            }
-        })
-    };
-
-    function remover_colab(id_equipe, id_colab)
+    function gerenciarEvento(id)
     {
-        $.ajax({
-            type: "POST",
-            url: "/equipes",
-            data: "id_evento="+ id_evento +"&id_colab="+ id_colab,
-            dataType: "json"
-        }).done(function(response) {
-            if(response.error == false)
-            {
-                atualizarEquipe();
-            } else {
-
-            }
-        }).fail(function(jqXHR, textStatus ) {
-            console.log("Request failed: " + textStatus);
-        });
+        location.href = "/equipes/gerenciar?evento="+id;
     }
-
     $(function(){
-        atualizarEquipe();
-        $(".chosen-sel").chosen({allow_single_deselect: true});
-
-        $("#add-colab").click(function(){
-            if($("#new-colab-id").val()*1 > 0 && $("#new-colab-func").val()*1 > 0 && $("#new-colab-value").val()*1 > 0)
+        $("#b-search").click(function() {
+            r_term = $("input[name='i_term']:checked").val();
+            if (r_term == 'nome' || (r_term == 'id' && $('#i_search').val() * 1 > 0))
             {
-                let new_colab_info = "acao=add_colab&evento_id={{ evento.getId }}&"+$("#new-colab").serialize();
+                let search_info = "acao=pesquisar&" + $("#f-search-event").serialize();
                 $.ajax({
                     type: "POST",
                     url: "/equipes",
-                    data: new_colab_info,
+                    data: search_info,
                     dataType: "json"
-                }).done(function(response) {
-                    console.log(response);
-                    if(response.error == false)
-                    {
-                        $("#new-colab-id option[value='"+ $("#new-colab-id").val() +"']").remove();
-                        $("#new-colab-id").val("").trigger('chosen:updated');
-                        $("#new-colab-func").val("").trigger('chosen:updated');
-                        $("#new-colab-value").val("");
-
-                        $("#new-colab-success").show();
-                        $("#new-colab-success").delay(1500).fadeOut('slow', 'swing');
-                        atualizarEquipe();
-                    }
-                }).fail(function(jqXHR, textStatus ) {
-                    console.log("Request failed: " + textStatus);
+                }).done(function (data) {
+                    let json_data = data;
+                    $('#result-row').show();
+                    $('#sr-table').DataTable({
+                        destroy: true,
+                        data: json_data,
+                        columns: [
+                            {data: 'id'},
+                            {data: 'descricao'},
+                            {data: 'data'},
+                            {data: 'local'},
+                            {data: 'categoria'},
+                            {data: 'acoes',
+                                "fnCreatedCell": function (nTd, sData, oData, iRow, iCol) {
+                                    $(nTd).html("<button type=\"button\" class=\"btn btn-block btn-primary\" onClick=\"gerenciarEvento('"+ oData.id +"')\"><i class=\"fa fa-fw fa-pencil\"></i> Gerenciar Equipe</button>");
+                                },
+                            }
+                        ],
+                        "language": {
+                            "sEmptyTable": "Nenhum registro encontrado",
+                            "sInfo": "Mostrando de _START_ até _END_ de _TOTAL_ registros",
+                            "sInfoEmpty": "Mostrando 0 até 0 de 0 registros",
+                            "sInfoFiltered": "(Filtrados de _MAX_ registros)",
+                            "sInfoPostFix": "",
+                            "sInfoThousands": ".",
+                            "sLengthMenu": "_MENU_ resultados por página",
+                            "sLoadingRecords": "Carregando...",
+                            "sProcessing": "Processando...",
+                            "sZeroRecords": "Nenhum registro encontrado",
+                            "sSearch": "Pesquisar",
+                            "oPaginate": {
+                                "sNext": "Próximo",
+                                "sPrevious": "Anterior",
+                                "sFirst": "Primeiro",
+                                "sLast": "Último"
+                            },
+                            "oAria": {
+                                "sSortAscending": ": Ordenar colunas de forma ascendente",
+                                "sSortDescending": ": Ordenar colunas de forma descendente"
+                            },
+                            "select": {
+                                "rows": {
+                                    "_": "Selecionado %d linhas",
+                                    "0": "Nenhuma linha selecionada",
+                                    "1": "Selecionado 1 linha"
+                                }
+                            }
+                        },
+                        "bFilter": false
+                    });
+                }).fail(function (jqXHR, textStatus) {
                 });
             } else {
-                $(function () {
-                    $('#new-colab-error').show();
-                    $('#new-colab-error').delay(1500).fadeOut('slow', 'swing');
-                });
+                $('#search-id-error').show();
+                $('#search-id-error').delay(1500).fadeOut('slow', 'swing');
             }
         });
     });
