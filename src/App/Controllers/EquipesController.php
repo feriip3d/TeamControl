@@ -75,11 +75,34 @@ class EquipesController extends Controller
                 }
 
                 echo json_encode($colaboradores);
+            } else if ($acao == "del_colab") {
+                $evento_id = filter_input(INPUT_POST, "evento_id", FILTER_VALIDATE_INT);
+                $colab_id = filter_input(INPUT_POST, "colab_id", FILTER_VALIDATE_INT);
+
+                if(ColaboradorDAL::removeFromEquipe($colab_id, $evento_id))
+                {
+                    $json = [
+                        "error" => false,
+                        "result" => [
+                            "message" => "Colaborador removido"
+                        ]
+                    ];
+                } else {
+                    $json = [
+                        "error" => true,
+                        "result" => [
+                            "message" => "Falha ao remover colaborador"
+                        ]
+                    ];
+                }
+
+                echo json_encode($json);
             }
         } else {
             if(empty($evento_id) || !is_numeric($evento_id))
             {
                 $this->pushParameter("error", "missing_id");
+                // TELA PARA CONSULTA
             } else {
                 $evento = EventoDAL::getById($evento_id);
                 if(is_null($evento))

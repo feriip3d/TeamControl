@@ -53,7 +53,7 @@
             <div class="box-body">
                 <div id="actions text-right" class="row">
                     <div class="col-md-12">
-                        <form method="NONE" id="new-colab" style="display:inline">
+                        <form id="new-colab" style="display:inline">
                             <label>Nome: </label>
                             <select style="width: 200px" class="form-control inline chosen-sel" name="i_colab_id" id="new-colab-id">
                                 <option value=""></option>
@@ -95,6 +95,7 @@
                             <th>Celular</th>
                             <th>Idade</th>
                             <th>Função</th>
+                            <th>Ações</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -145,7 +146,6 @@
             dataType: 'json',
             data: "acao=list_colab&evento_id={{ evento.getId }}",
             complete: function(data) {
-                console.log(data);
                 let json_data = data.responseJSON;
                 $('#colab-table').DataTable({
                     destroy: true,
@@ -156,7 +156,18 @@
                         {data: 'telefone'},
                         {data: 'celular'},
                         {data: 'data_nascimento'},
-                        {data: 'funcao'}
+                        {data: 'funcao'},
+                        {data: 'acoes',
+                            "fnCreatedCell": function (nTd, sData, oData, iRow, iCol) {
+                                $(nTd).html("" +
+                                    "<button type=\"button\" style=\"display:inline;margin-top:0;margin-left:5px;width:40px\" class=\"btn btn-block btn-danger\" onClick=\"remover_colab('{{ evento.getId }}', '"+ oData.id +"')\"> <i class=\"fa fa-remove\"></i></button>"+
+                                    "<button type=\"button\" style=\"display:inline;margin-top:0;margin-left:5px;width:40px\" class=\"btn btn-block btn-success\" onClick=\"window.open('" +
+                                    "https://api.whatsapp.com/send?phone=55"+ oData.celular +"" +
+                                    "&text=Olá "+ oData.nome +", você poderia confirmar sua presença no evento? Obrigado" +
+                                    "')\"> <i class=\"fa fa-whatsapp\"></i></button>"
+                                );
+                            },
+                        }
                     ],
                     "language": {
                         "sEmptyTable": "Nenhum registro encontrado",
@@ -196,6 +207,25 @@
             }
         })
     };
+
+    function remover_colab(id_equipe, id_colab)
+    {
+        $.ajax({
+            type: "POST",
+            url: "/equipes",
+            data: "id_evento="+ id_evento +"&id_colab="+ id_colab,
+            dataType: "json"
+        }).done(function(response) {
+            if(response.error == false)
+            {
+                atualizarEquipe();
+            } else {
+
+            }
+        }).fail(function(jqXHR, textStatus ) {
+            console.log("Request failed: " + textStatus);
+        });
+    }
 
     $(function(){
         atualizarEquipe();

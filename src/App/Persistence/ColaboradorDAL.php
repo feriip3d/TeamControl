@@ -144,4 +144,21 @@ class ColaboradorDAL
 
         return false;
     }
+
+    public static function removeFromEquipe(int $colab_id, int $evento_id)
+    {
+        $sql = Database::getConnection()->prepare("DELETE FROM eventos_colab 
+            INNER JOIN equipes ON equipes.id = eventos_colab.id_equipe
+            WHERE id_colab = :pIdColab AND
+            id_evento = :pIdEvento");
+        $sql->bindParam(':pIdColab', $colab_id, PDO::PARAM_INT);
+        $sql->bindParam(':pIdEvento', $evento_id, PDO::PARAM_INT);
+        $success = $sql->execute();
+        Database::closeConnection();
+
+        if($success)
+            return true;
+
+        return false;
+    }
 }

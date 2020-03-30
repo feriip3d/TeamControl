@@ -168,6 +168,7 @@ class Colaborador implements \Nautilus\Resources\Model
         $instance = get_object_vars($this);
         $instance['data_nascimento'] = MiscHelper::to_br_dateformat($instance['data_nascimento']);
         $instance['funcao'] = $this->funcao->getNome();
+        $instance['acoes'] = "";
         return json_encode($instance);
     }
 
@@ -176,6 +177,7 @@ class Colaborador implements \Nautilus\Resources\Model
         $instance = get_object_vars($this);
         $instance['data_nascimento'] = MiscHelper::to_br_dateformat($instance['data_nascimento']);
         $instance['funcao'] = $this->funcao->getNome();
+        $instance['acoes'] = "";
         return $instance;
     }
 }
