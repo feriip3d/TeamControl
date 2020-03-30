@@ -19,8 +19,6 @@ define("ROOT_DIR", str_replace("\\Webroot", "", __DIR__));
 // Carregamento do autoloader
 require_once ROOT_DIR."/vendor/autoload.php";
 
-echo password_hash("usuario123@", PASSWORD_BCRYPT);
-
 // Carregamento das classes principais
 use Nautilus\Resources\Dispatcher;
 $dotenv = Dotenv\Dotenv::createImmutable(ROOT_DIR);
