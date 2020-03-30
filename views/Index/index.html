@@ -2,72 +2,53 @@
 
 {% block app_content %}
 <div class="row">
-    <div class="box">
-        <div class="box-header with-border">
-            <h3 class="box-title">Bordered Table</h3>
+    <div class="col-md-12">
+        <div class="box">
+            <div class="box-header with-border">
+                <h3 class="box-title">Últimos eventos adicionados</h3>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th style="width: 10px">#</th>
+                            <th>Código do Evento</th>
+                            <th>Descrição</th>
+                            <th>Categoria</th>
+                            <th>Local</th>
+                            <th>Data</th>
+                            <th>Ação</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for evento in eventos %}
+                        <tr>
+                            <td style="text-align:right">{{ loop.index }}</td>
+                            <td style="text-align:right">{{ evento.getId }}</td>
+                            <td>{{ evento.getDescricao }}</td>
+                            <td>{{ evento.getCategoria.getDescricao }}</td>
+                            <td>{{ evento.getLocal.getNome }}</td>
+                            <td style="text-align:center">{{ evento.getData }}</td>
+                            <td><button type="button" class="btn btn-block btn-primary" onClick="gerenciarEvento('{{ evento.getId }}')">Gerenciar Equipe</button></td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
-        <!-- /.box-header -->
-        <div class="box-body">
-            <table class="table table-bordered">
-                <tbody><tr>
-                    <th style="width: 10px">#</th>
-                    <th>Task</th>
-                    <th>Progress</th>
-                    <th style="width: 40px">Label</th>
-                </tr>
-                <tr>
-                    <td>1.</td>
-                    <td>Evento blablabla</td>
-                    <td>
-                        <div class="progress progress-xs">
-                            <div class="progress-bar progress-bar-danger" style="width: 55%"></div>
-                        </div>
-                    </td>
-                    <td><span class="badge bg-red">55%</span></td>
-                </tr>
-                <tr>
-                    <td>2.</td>
-                    <td>Clean database</td>
-                    <td>
-                        <div class="progress progress-xs">
-                            <div class="progress-bar progress-bar-yellow" style="width: 70%"></div>
-                        </div>
-                    </td>
-                    <td><span class="badge bg-yellow">70%</span></td>
-                </tr>
-                <tr>
-                    <td>3.</td>
-                    <td>Cron job running</td>
-                    <td>
-                        <div class="progress progress-xs progress-striped active">
-                            <div class="progress-bar progress-bar-primary" style="width: 30%"></div>
-                        </div>
-                    </td>
-                    <td><span class="badge bg-light-blue">30%</span></td>
-                </tr>
-                <tr>
-                    <td>4.</td>
-                    <td>Fix and squish bugs</td>
-                    <td>
-                        <div class="progress progress-xs progress-striped active">
-                            <div class="progress-bar progress-bar-success" style="width: 90%"></div>
-                        </div>
-                    </td>
-                    <td><span class="badge bg-green">90%</span></td>
-                </tr>
-                </tbody></table>
-        </div>
-        <!-- /.box-body -->
-        <div class="box-footer clearfix">
-            <ul class="pagination pagination-sm no-margin pull-right">
-                <li><a href="#">«</a></li>
-                <li><a href="#">1</a></li>
-                <li><a href="#">2</a></li>
-                <li><a href="#">3</a></li>
-                <li><a href="#">»</a></li>
-            </ul>
-        </div>
+        <!-- /.box -->
     </div>
 </div>
 <br/>
+{% endblock %}
+
+{% block scripts %}
+{{ parent() }}
+<script>
+    function gerenciarEvento(id)
+    {
+        location.href = "/equipes?evento="+id;
+    }
+</script>
 {% endblock %}

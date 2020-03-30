@@ -38,6 +38,7 @@ class User implements \Nautilus\Resources\Model
 
     public function __construct2($full_name, $username, $password, $email, $email_verified_at, $created_at)
     {
+        $this->setId(0);
         $this->setFullName($full_name);
         $this->setUsername($username);
         $this->setPasswordHash($password);

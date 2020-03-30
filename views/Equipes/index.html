@@ -1,16 +1,135 @@
-{% extends "Layouts/sidebar_layout.html" %}
+{% extends "Layouts/topnav_layout.html" %}
+
 {% block styles %}
 {{ parent() }}
 <link rel="stylesheet" href="/public/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
+<style>
+    .title-info
+    {
+        font-weight: bolder;
+    }
+</style>
 {% endblock %}
 
 {% block app_content %}
+{% if error is empty %}
 <div class="row">
     <div class="col-md-12">
-        {{ user.getNome }}
+        <div class="box">
+            <div class="box-header with-border">
+                <h3 class="box-title">Informações do Evento</h3>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+                <div style="display:inline-block;padding:5px">
+                    <i class="fa fa-fw fa-info-circle"></i><span class="title-info">Código do Evento</span>: {{ evento.getId }}<br/>
+                    <i class="fa fa-fw fa-sticky-note-o"></i><span class="title-info">Descrição</span>: {{ evento.getDescricao }}<br/>
+
+                </div>
+                <div style="display:inline-block;padding:5px">
+                    <i class="fa fa-fw fa-reorder"></i><span class="title-info">Categoria</span>: {{ evento.getCategoria.getDescricao }}<br/>
+                    <i class="fa fa-fw fa-calendar"></i><span class="title-info">Data</span>: {{ evento.getData }}<br/>
+                </div>
+                <div style="display:inline-block;padding:5px">
+                    <i class="fa fa-fw fa-users"></i><span class="title-info">Total de Convidados</span>: {{ evento.getQtdePessoas }}<br/>
+                    <i class="fa fa-fw fa-building"></i><span class="title-info">Local</span>: {{ evento.getLocal.getNome }}<br/>
+                </div>
+                <div style="display:inline-block;padding:5px">
+                    <i class="fa fa-fw fa-location-arrow"></i><span class="title-info">Endereço</span>: {{ evento.getLocal.getEndereco }}<br/>
+                    <i class="fa fa-fw fa-money"></i><span class="title-info">Valor do Evento</span>: R$ {{ evento.getCategoria.getValor }}<br/>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
-<br/>
+<div class="row">
+    <div class="col-md-12">
+        <div class="box">
+            <div class="box-header with-border">
+                <h3 class="box-title">Gerenciar Colaboradores</h3>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+                <div id="actions text-right" class="row">
+                    <div class="col-md-12">
+                        <label>Nome: </label>
+                        <select style="width: 200px" class="form-control inline" id="id">
+                            <option value="1">Jose da Silva</option>
+                            <option value="2">Geremias</option>
+                            <option value="3">Gabriel</option>
+                            <option value="4">Lucas</option>
+                        </select>
+                        <label style="padding-left: 10px;padding-right: 10px">Funcao:</label><input style="padding-left:5px;width: 100px" class="form-control inline" type="text" value="Barman">
+                        <button style="margin-left: 15px" class="btn btn-success">Adicionar Colaborador</button>
+                    </div>
+                </div>
+                <br/>
+                <table class="table table-bordered">
+                    <tbody><tr>
+                        <th style="width: 10px">#</th>
+                        <th>Código do Colaborador</th>
+                        <th>Nome</th>
+                        <th>Telefone</th>
+                        <th>Celular</th>
+                        <th>Idade</th>
+                        <th>Função</th>
+                        <th style="width: 40px">Opções</th>
+                    </tr>
+                    {% for colaborador in colaboradores %}
+                    <tr>
+                        <td style="text-align:right">{{ loop.index }}</td>
+                        <td style="text-align:right">{{ colaborador.getId }}</td>
+                        <td>{{ colaborador.getNome }}</td>
+                        <td>{{ colaborador.getTelefone }}</td>
+                        <td>{{ colaborador.getCelular }}</td>
+                        <td style="text-align:center">{{ colaborador.getDataNascimento }}</td>
+                        <td>Barman</td>
+                        <td class="actions text-right">
+                            <a href="remover?id=" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i> Remover</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+
+                    </tbody></table>
+            </div>
+            <!-- /.box-body -->
+            <div class="box-footer clearfix">
+                <ul class="pagination pagination-sm no-margin pull-right">
+                    <li><a href="#">«</a></li>
+                    <li><a href="#">1</a></li>
+                    <li><a href="#">2</a></li>
+                    <li><a href="#">3</a></li>
+                    <li><a href="#">»</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% else %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="box box-default">
+            <div class="box-header with-border">
+                <i class="fa fa-warning"></i>
+
+                <h3 class="box-title">Erro</h3>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+                <div class="alert alert-danger alert-dismissible">
+                    {% if error == 'missing_id' %}
+                    <h4><i class="icon fa fa-ban"></i> Código inválido!</h4>
+                    O código do evento não foi informado.
+                    {% elseif error == 'missing_event' %}
+                    <h4><i class="icon fa fa-ban"></i> Evento inválido!</h4>
+                    O evento informado não existe, ou é inválido.
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
 {% endblock %}
 
 {% block scripts %}

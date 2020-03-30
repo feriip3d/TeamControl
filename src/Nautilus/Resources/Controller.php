@@ -29,7 +29,7 @@ class Controller
 
     public function getParameter(String $paramater_name)
     {
-        return filter_var($this->parameters[$paramater_name]);
+        return filter_var($this->parameters[$paramater_name] ?? null);
     }
 
     // Carrega a view do controller e as variaveis
@@ -80,6 +80,7 @@ class Controller
         }
         catch (Error $e)
         {
+//            var_dump($e);
             ErrorHelper::generateError(404);
         }
     }

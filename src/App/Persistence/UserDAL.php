@@ -27,13 +27,14 @@ class UserDAL
         $sql->bindParam(':pUsername', $username, PDO::PARAM_STR);
         $sql->execute();
         $result = $sql->fetch(PDO::FETCH_ASSOC);
+        $user = null;
         if($result)
         {
-            return new User($result['id'], $result['full_name'], $result['username'],
+            $user = new User($result['id'], $result['full_name'], $result['username'],
                 $result['pass_hash'], $result['email'], $result['email_verified_at'], $result['created_at']);
         }
-        else
-            return null;
+        Database::closeConnection();
+        return $user;
     }
 
     public static function getByEmail(string $email) : ?User
@@ -52,13 +53,15 @@ class UserDAL
         $sql->bindParam(':pEmail', $email, PDO::PARAM_STR);
         $sql->execute();
         $result = $sql->fetch(PDO::FETCH_ASSOC);
+        $user = null;
         if($result)
         {
-            return new User($result['id'], $result['full_name'], $result['username'],
+            $user = new User($result['id'], $result['full_name'], $result['username'],
                 $result['pass_hash'], $result['email'], $result['email_verified_at'], $result['created_at']);
         }
-        else
-            return null;
+
+        Database::closeConnection();
+        return $user;
     }
 
     public static function getByStatement(string $where_statement, array $parameters) : ?array
@@ -84,6 +87,7 @@ class UserDAL
             }
         }
 
+        Database::closeConnection();
         return $users;
     }
 }
