@@ -166,7 +166,10 @@ class Colaborador implements \Nautilus\Resources\Model
     public function serialize()
     {
         $instance = get_object_vars($this);
-        $instance['data_nascimento'] = MiscHelper::to_br_dateformat($instance['data_nascimento']);
+        $instance['data_nascimento'] = $this->getDataNascimento();
+        $instance['cpf'] = $this->getCPF();
+        $instance['telefone'] = $this->getTelefone();
+        $instance['celular'] = $this->getCelular();
         $instance['funcao'] = $this->funcao->getNome();
         $instance['acoes'] = "";
         return json_encode($instance);
@@ -176,6 +179,9 @@ class Colaborador implements \Nautilus\Resources\Model
     {
         $instance = get_object_vars($this);
         $instance['data_nascimento'] = MiscHelper::to_br_dateformat($instance['data_nascimento']);
+        $instance['cpf'] = $this->getCPF();
+        $instance['telefone'] = $this->getTelefone();
+        $instance['celular'] = $this->getCelular();
         $instance['funcao'] = $this->funcao->getNome();
         $instance['acoes'] = "";
         return $instance;
