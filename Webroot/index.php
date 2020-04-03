@@ -14,10 +14,10 @@ error_reporting(0);
 // MODO PRODUÇÃO ATIVADO
 
 // Caminho raiz de todo o framework
-define("ROOT_DIR", str_replace("\\Webroot", "", __DIR__));
+define("ROOT_DIR", str_replace("Webroot", "", __DIR__));
 
 // Carregamento do autoloader
-require_once ROOT_DIR."/vendor/autoload.php";
+require_once ROOT_DIR."vendor/autoload.php";
 
 // Carregamento das classes principais
 use Nautilus\Resources\Dispatcher;
