@@ -16,7 +16,6 @@ class Dispatcher
     // TODO: carregar de um arquivo .env ou similar
     private array $unprotected_urls = [
         "/login",
-        "/login/forgot",
     ];
 
     public function __construct()
