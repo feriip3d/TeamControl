@@ -16,8 +16,6 @@
     },
     "require": {
         "twig/twig": "^3.0",
-        "vlucas/phpdotenv": "^4.1",
-        "phpmailer/phpmailer": "^6.1",
-        "league/oauth2-google": "^3.0"
+        "vlucas/phpdotenv": "^4.1"
     }
 }
