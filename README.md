@@ -6,7 +6,7 @@ Instruções de Instalação
 o arquivo db_teamcontrol.sql
 
 Atividade desenvolvida para a disciplina de Engenharia de Software I (1º Semestre/2020) pelos alunos:
-Felipe dos Santos Geroldi
-Gabriel Pellin Caetano
-Lucas Felipe Gomes
-Leonardo Custodio
+Felipe dos Santos Geroldi,
+Gabriel Pellin Caetano,
+Lucas Felipe Gomes,
+Leonardo Custodio.
